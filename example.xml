@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE company [
+<!ENTITY nbsp "&#xA0;">
+<!ENTITY writer "Writer: Donald Duck.">
+<!ENTITY copyright "Copyright: W3Schools.">
+]>
+<company>
+    <people id="an">
+        <person id="1" type="number" cln="code" tbn="id"/>
+        <person id="2" type="number" cln="code" tbn="id"/>
+        <person id="3" type="number" cln="code" tbn="id"/>
+    </people>
+    <people id="thanh">
+        <person id="1" type="string" cln="code" tbn="id"/>
+        <person id="2" type="string" cln="code" tbn="id"/>
+        <person id="3" type="string" cln="code" tbn="id"/>
+    </people>
+</company>
