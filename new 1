@@ -1,0 +1,39 @@
+
+
+
+
+				{
+				  "Database": {
+					"Tables": {
+					  "People": {
+						"Columns": [
+						  {"Name": "Name", "Type": "String"},
+						  {"Name": "Age", "Type": "Integer"},
+						  {"Name": "City", "Type": "String"}
+						],
+						"Data": [
+						  {"Name": "John", "Age": 25, "City": "New York"},
+						  {"Name": "Alice", "Age": 30, "City": "San Francisco"},
+						  {"Name": "Bob", "Age": 22, "City": "Chicago"}
+						]
+					  },
+					  "Products": {
+						"Columns": [
+						  {"Name": "ProductID", "Type": "Integer"},
+						  {"Name": "ProductName", "Type": "String"},
+						  {"Name": "Price", "Type": "Double"}
+						],
+						"Data": [
+						  {"ProductID": 1, "ProductName": "Widget", "Price": 19.99},
+						  {"ProductID": 2, "ProductName": "Gadget", "Price": 29.99},
+						  {"ProductID": 3, "ProductName": "Tool", "Price": 14.99}
+						]
+					  }
+					}
+				  }
+				}
+
+echo deb [signed-by=jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+
+
+
