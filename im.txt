@@ -1,0 +1,4 @@
+my name is nguyen le thanh;
+-- hello world
+i was born in kontum
+hello everyone

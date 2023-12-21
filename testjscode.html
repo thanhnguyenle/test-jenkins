@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+<!-- <script src="testjscode.js"></script> -->
+
+<body>
+    <canvas id="player-chart" style="width:100%;max-width:600px"></canvas>
+    <canvas id="profile-chart" style="width:100%;max-width:600px"></canvas>
+
+    <script>
+        const xValues = [50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150];
+        const yValues = [7, 8, 8, 9, 9, 9, 10, 11, 14, 14, 15];
+        var $jscomp = {
+            scope: {}
+        };
+        $jscomp.defineProperty = "function" == typeof Object.defineProperties ? Object.defineProperty : function (d, h, p) {
+            if (p.get || p.set) throw new TypeError("ES3 does not support getters and setters.");
+            d != Array.prototype && d != Object.prototype && (d[h] = p.value)
+        };
+        $jscomp.getGlobal = function (d) {
+            return "undefined" != typeof window && window === d ? d : "undefined" != typeof global && null != global ? global : d
+        };
+        $jscomp.global = $jscomp.getGlobal(this);
+        $jscomp.SYMBOL_PREFIX = "jscomp_symbol_";
+        $jscomp.initSymbol = function () {
+            $jscomp.initSymbol = function () { };
+            $jscomp.global.Symbol || ($jscomp.global.Symbol = $jscomp.Symbol)
+        };
+        $jscomp.symbolCounter_ = 0;
+        $jscomp.Symbol = function (d) {
+            return $jscomp.SYMBOL_PREFIX + (d || "") + $jscomp.symbolCounter_++
+        };
+        $jscomp.initSymbolIterator = function () {
+            $jscomp.initSymbol();
+            var d = $jscomp.global.Symbol.iterator;
+            d || (d = $jscomp.global.Symbol.iterator = $jscomp.global.Symbol("iterator"));
+            "function" != typeof Array.prototype[d] && $jscomp.defineProperty(Array.prototype, d, {
+                configurable: !0,
+                writable: !0,
+                value: function () {
+                    return $jscomp.arrayIterator(this)
+                }
+            });
+            $jscomp.initSymbolIterator = function () { }
+        };
+        $jscomp.arrayIterator = function (d) {
+            var h = 0;
+            return $jscomp.iteratorPrototype(function () {
+                return h < d.length ? {
+                    done: !1,
+                    value: d[h++]
+                } : {
+                    done: !0
+                }
+            })
+        };
+        $jscomp.iteratorPrototype = function (d) {
+            $jscomp.initSymbolIterator();
+            d = {
+                next: d
+            };
+            d[$jscomp.global.Symbol.iterator] = function () {
+                return this
+            };
+            return d
+        };
+        $jscomp.makeIterator = function (d) {
+            $jscomp.initSymbolIterator();
+            var h = d[Symbol.iterator];
+            return h ? h.call(d) : $jscomp.arrayIterator(d)
+        };
+        function u(a) {
+            for (var b = 0; b < a.length; b++) a[b] = a[b].substring(a[b].indexOf("-") + 1, a[b].length);
+            return a
+        }
+
+        function n(a, b) {
+            var c = [];
+            b = $jscomp.makeIterator(b);
+            for (var d = b.next(); !d.done; d = b.next()) key = d.value, c.push(a[key]);
+            return c
+        }
+        function x(a) {
+            var b = JSON.parse(a.ChartActivePlayer),
+                c = Object.keys(b).sort(),
+                d = n(b, c);
+            console.log(b);
+            var h = JSON.parse(a.ChartNewPlayer),
+                b = Object.keys(h).sort(),
+                h = n(h, b),
+                g = n(JSON.parse(a.ChartNewPlayerIsSelfRegister), b);
+            a = u(c);
+            d = [{
+                data: d,
+                borderColor: "#11a8ff",
+                backgroundColor: "#11a8ff",
+                fill: !1,
+                label: "Active Player"
+            }, {
+                data: h,
+                borderColor: "#6a71ab",
+                backgroundColor: "#6a71ab",
+                fill: !1,
+                label: "New Player"
+            }];
+            c = document.getElementById("player-chart").getContext("2d");
+            new Chart(c, {
+                type: "line",
+                data: {
+                    labels: a,
+                    datasets: d
+                },
+                options: {
+                    responsive: !0,
+                    maintainAspectRatio: !1,
+                    layout: {
+                        padding: {
+                            left: 0,
+                            top: 0,
+                            bottom: 0
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: !0,
+                            grid: {
+                                display: !1
+                            },
+                            ticks: {
+                                padding: 5,
+                                font: {
+                                    weight: "light"
+                                }
+                            }
+                        },
+                        x: {
+                            beginAtZero: !0,
+                            grid: {
+                                display: !1
+                            },
+                            ticks: {
+                                padding: 5,
+                                font: {
+                                    weight: "light"
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            mode: "nearest",
+                            intersect: !1,
+                            backgroundColor: "rgba(0, 0, 0, 0.7)",
+                            custom: function (a) {
+                                var c = document.getElementById("chartjs-tooltip");
+                                c || (c = document.createElement("div"), c.id = "chartjs-tooltip", c.classList.add("chartjs-tooltip"), document.body.appendChild(c));
+                                if (0 === a.opacity) c.style.opacity =
+                                    0;
+                                else {
+                                    var b = a.dataset.label,
+                                        d = a.dataset.data[a.dataIndex];
+                                    b && null !== d ? (c.innerHTML = b + ": " + d, c.style.background = "#333", c.style.border = "1px solid #333", c.style.opacity = 1, c.style.left = a.tooltip.caretX + "px", c.style.top = a.tooltip.caretY + "px") : c.style.opacity = 0
+                                }
+                            },
+                            callbacks: {
+                                label: function (a) {
+                                    var c = a.dataset.label,
+                                        b = a.dataset.data[a.dataIndex];
+                                    if ("New Player" === c) return c = g[a.dataIndex], a = ["New Player: " + b], 0 < c && a.push("self signup: " + c), b -= c, 0 < b && a.push("agent signup: " + b), a;
+                                    if ("Active Player" === c) return "Active Player: " +
+                                        b
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+        }
+        var r = "#fa8c0b #63A41B #ea9ad2 #969eda #96dacf #ffef6b #ffb659 #ff4747 #6edc98 #2f42c8".split(" "),
+        q = function (a, b, c) {
+            return {
+                data: a,
+                borderColor: r[c % r.length],
+                backgroundColor: r[c % r.length],
+                borderWidth: 3,
+                fill: !1,
+                label: b
+            }
+        }
+        function w(a) {
+            a = JSON.parse(a.chartDatasetMap);
+            var b = a.turnover,
+                c = Object.keys(b).sort(),
+                b = n(b, c),
+                e = a.winloss,
+                d = Object.keys(e).sort(),
+                e = n(e, d),
+                c = u(c),
+                g = 0,
+                b = [q(b, "Turnover", g++), q(e, "Win/Loss", g++)],
+                k = {},
+                l = {};
+            Object.entries(a).filter(function (a) {
+                return a[0].startsWith("turnover_")
+            }).forEach(function (a) {
+                var c = a[0].substring(9).toUpperCase();
+                a = a[1];
+                var b = Object.keys(a).sort();
+                a = n(a, b);
+                k[c] = q(a, c, g++)
+            });
+            Object.entries(a).filter(function (a) {
+                return a[0].startsWith("winloss_")
+            }).forEach(function (a) {
+                var c = a[0].substring(8).toUpperCase();
+                a = a[1];
+                var b = Object.keys(a).sort();
+                a = n(a, b);
+                l[c] = q(a, c, g++)
+            });
+            a = document.getElementById("profile-chart").getContext("2d");
+            new Chart(a, {
+                type: "line",
+                data: {
+                    labels: c,
+                    datasets: b
+                },
+                options: {
+                    responsive: !0,
+                    maintainAspectRatio: !1,
+                    layout: {
+                        padding: {
+                            left: 0,
+                            top: 0,
+                            bottom: 0
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: !0,
+                            grid: {
+                                display: !1
+                            },
+                            ticks: {
+                                padding: 5,
+                                font: {
+                                    weight: "light"
+                                }
+                            }
+                        },
+                        x: {
+                            beginAtZero: !0,
+                            grid: {
+                                display: !1
+                            },
+                            ticks: {
+                                padding: 5,
+                                font: {
+                                    weight: "light"
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            mode: "nearest",
+                            intersect: !1,
+                            backgroundColor: "rgba(0, 0, 0, 0.7)",
+                            callbacks: {
+                                label: function (a) {
+                                    var c =
+                                        a.dataset.label,
+                                        b = a.dataset.data[a.dataIndex],
+                                        d = NumberFormatUtil.formatNumber(b, 2).toLocaleString("en-US"),
+                                        c = [c + ": " + d];
+                                    subDatas = [];
+                                    if ("Turnover" === a.dataset.label) return Object.entries(k).filter(function (c) {
+                                        return 0 != c[1].data[a.dataIndex]
+                                    }).forEach(function (c) {
+                                        var d = c[1].data[a.dataIndex];
+                                        subDatas.push([c[0], d, d / b * 100])
+                                    }), c.concat(subDatas.sort(function (a, c) {
+                                        return c[1] - a[1]
+                                    }).map(function (a) {
+                                        return a[0] + ": " + NumberFormatUtil.formatNumber(a[1], 2).toLocaleString("en-US") + (a[2] ? " (" + NumberFormatUtil.formatNumber(a[2],
+                                            2) + "%)" : "")
+                                    }));
+                                    if ("Win/Loss" === a.dataset.label) return Object.entries(l).filter(function (c) {
+                                        return 0 != c[1].data[a.dataIndex]
+                                    }).forEach(function (c) {
+                                        var d = c[1].data[a.dataIndex],
+                                            e = 0 > b && 0 > d ? d / b * 100 : "";
+                                        subDatas.push([c[0], d, e ? e : ""])
+                                    }), c.concat(subDatas.sort(function (a, c) {
+                                        return a[1] - c[1]
+                                    }).map(function (a) {
+                                        return a[0] + ": " + NumberFormatUtil.formatNumber(a[1], 2).toLocaleString("en-US") + (a[2] ? " (" + NumberFormatUtil.formatNumber(a[2], 2) + "%)" : "")
+                                    }))
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+        }
+
+        function generateRandomData() {
+            const data = {};
+            for (let i = 1; i <= 30; i++) {
+                const date = `2022-01-${i < 10 ? '0' + i : i}`;
+                data[date] = Math.floor(Math.random() * 100) + 1;
+            }
+            return data;
+        }
+
+        // Generating sample data for ChartActivePlayer
+        const chartActivePlayerData = generateRandomData();
+
+        // Generating sample data for ChartNewPlayer
+        const chartNewPlayerData = generateRandomData();
+
+        // Generating sample data for ChartNewPlayerIsSelfRegister
+        const chartNewPlayerSelfRegisterData = generateRandomData();
+
+        // Creating the t object with generated data
+        const t = {
+            ChartActivePlayer: JSON.stringify(chartActivePlayerData),
+            ChartNewPlayer: JSON.stringify(chartNewPlayerData),
+            ChartNewPlayerIsSelfRegister: JSON.stringify(chartNewPlayerSelfRegisterData),
+            // Other properties used in the code
+        };
+
+        console.log(t.ChartActivePlayer);
+        rj = JSON.parse(t.ChartActivePlayer);
+        console.log(rj)
+        console.log(Object.keys(rj).sort())
+
+        //x(t);
+
+
+        // Function to generate random data
+        function generateRandomData() {
+            const data = {};
+            for (let i = 1; i <= 30; i++) {
+                const date = `2022-01-${i < 10 ? '0' + i : i}`;
+                data[date] = Math.floor(Math.random() * 100) + 1;
+            }
+            return data;
+        }
+
+        // Generating example data for testing the 'w' function
+        const exampleData = {
+            chartDatasetMap: JSON.stringify({
+                turnover: generateRandomData(),
+                winloss: generateRandomData(),
+                turnover_ABC: generateRandomData(),
+                turnover_XYZ: generateRandomData(),
+                winloss_ABC: generateRandomData(),
+                winloss_XYZ: generateRandomData(),
+            })
+        };
+      
+        w(exampleData)
+    </script>
+    <!-- new Chart("player-chart", {
+  type: "line",
+  data: {
+    labels: xValues,
+    datasets: [{
+      fill: false,
+      lineTension: 0,
+      backgroundColor: "rgba(0,0,255,1.0)",
+      borderColor: "rgba(0,0,255,0.1)",
+      data: yValues
+    }]
+  },
+  options: {
+    legend: {display: false},
+    scales: {
+      yAxes: [{ticks: {min: 6, max:16}}],
+    }
+  }
+}); -->
+</body>
+
+</html>
